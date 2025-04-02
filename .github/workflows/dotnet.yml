@@ -35,3 +35,5 @@ jobs:
       with:
         name: sample-app
         path: ./sample-app
+    - name: Test Reporter
+      uses: dorny/test-reporter@v2.0.0
