@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Restore local tools
+      run: dotnet tool restore
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -26,8 +28,14 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal --logger trx
+      run: dotnet test --no-build --verbosity normal --logger trx --collect:"XPlat Code Coverage"
       #test reporter action
+    - name: Generate code coverage report
+      run: dotnet reportgenerator -reports:**/coverage.cobertura.xml -targetdir:./coverage -reporttypes:MarkdownSummary
+      if: success() || failure()
+    - name: Upload code coverage report
+      run: cat coverage/Summary.md >> $GITHUB_STEP_SUMMARY
+      if: success() || failure()
     - name: Generate test summary
       uses: dorny/test-reporter@v2
       if: success() || failure()
