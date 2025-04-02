@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Restore local tools
-      run: dotnet tool restore
     - uses: actions/checkout@v4
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
@@ -25,6 +23,8 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore dependencies
       run: dotnet restore
+    - name: Restore local tools
+      run: dotnet tool restore
     - name: Build
       run: dotnet build --no-restore
     - name: Test
